@@ -30,10 +30,10 @@ the day Composer becomes an option.
 ## Quick start
 
 ```php
-use PhpLogger\Enum\Outcome;
-use PhpLogger\LoggerFactory;
-use PhpLogger\Payload\DbQueryPayload;
-use PhpLogger\Support\Stopwatch;
+use Logger\Enum\Outcome;
+use Logger\LoggerFactory;
+use Logger\Payload\DbQueryPayload;
+use Logger\Support\Stopwatch;
 
 $logger = LoggerFactory::fromArray(require __DIR__ . '/config/logger.php');
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Config;
+namespace Logger\Config;
 
-use PhpLogger\Exception\InvalidConfigurationException;
+use Logger\Exception\InvalidConfigurationException;
 
 /**
  * Allow-list for free-form structures.

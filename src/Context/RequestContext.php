@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Context;
+namespace Logger\Context;
 
 /**
  * Correlation fields shared by every record.

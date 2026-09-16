@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Enum;
+namespace Logger\Enum;
 
 /**
  * Result of the operation the event describes. UNKNOWN is for events that have

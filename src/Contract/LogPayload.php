@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Contract;
+namespace Logger\Contract;
 
 /**
  * A log type. Implement this to add a new one: the pipeline never needs to know

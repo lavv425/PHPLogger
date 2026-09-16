@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Config;
+namespace Logger\Config;
 
-use PhpLogger\Enum\Level;
-use PhpLogger\Exception\InvalidConfigurationException;
+use Logger\Enum\Level;
+use Logger\Exception\InvalidConfigurationException;
 
 final class ChannelConfig
 {

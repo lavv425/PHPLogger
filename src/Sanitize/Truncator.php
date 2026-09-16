@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Sanitize;
+namespace Logger\Sanitize;
 
-use PhpLogger\Config\LimitsConfig;
-use PhpLogger\Contract\LogRecord;
-use PhpLogger\Formatter\FormatterInterface;
-use PhpLogger\Formatter\JsonFormatter;
-use PhpLogger\Support\Text;
+use Logger\Config\LimitsConfig;
+use Logger\Contract\LogRecord;
+use Logger\Formatter\FormatterInterface;
+use Logger\Formatter\JsonFormatter;
+use Logger\Support\Text;
 use Throwable;
 
 /**

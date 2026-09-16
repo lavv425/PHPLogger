@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Contract;
+namespace Logger\Contract;
 
 use DateTimeImmutable;
-use PhpLogger\Enum\Outcome;
+use Logger\Enum\Outcome;
 
 /**
  * The envelope, fully resolved and ready to be rendered.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Enum;
+namespace Logger\Enum;
 
 /**
  * Maps PHP error bitmask values to their constant name and to a log level.

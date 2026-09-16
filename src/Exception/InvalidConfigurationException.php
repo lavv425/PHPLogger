@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Exception;
+namespace Logger\Exception;
 
 use InvalidArgumentException;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Processor;
+namespace Logger\Processor;
 
-use PhpLogger\Contract\LogRecord;
+use Logger\Contract\LogRecord;
 
 interface ProcessorInterface
 {

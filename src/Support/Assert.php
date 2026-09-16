@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Support;
+namespace Logger\Support;
 
-use PhpLogger\Enum\Level;
-use PhpLogger\Enum\Outcome;
-use PhpLogger\Exception\InvalidLogEventException;
+use Logger\Enum\Level;
+use Logger\Enum\Outcome;
+use Logger\Exception\InvalidLogEventException;
 
 /**
  * Validation for caller-supplied event data. Names are restricted to a fixed

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Sanitize;
+namespace Logger\Sanitize;
 
 /**
  * Turns a SQL statement into a value-free fingerprint.

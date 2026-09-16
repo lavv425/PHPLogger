@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Support;
+namespace Logger\Support;
 
 /**
  * Shared by a logger and every channel-pinned clone of it, so an error raised

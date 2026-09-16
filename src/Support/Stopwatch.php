@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Support;
+namespace Logger\Support;
 
 /**
  * Measures duration and nothing else. Interpreting the result of the measured

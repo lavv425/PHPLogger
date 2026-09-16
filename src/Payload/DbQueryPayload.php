@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Payload;
+namespace Logger\Payload;
 
-use PhpLogger\Enum\DbOperation;
-use PhpLogger\Enum\LogType;
-use PhpLogger\Exception\InvalidLogEventException;
-use PhpLogger\Support\Assert;
+use Logger\Enum\DbOperation;
+use Logger\Enum\LogType;
+use Logger\Exception\InvalidLogEventException;
+use Logger\Support\Assert;
 
 /**
  * Database operation.

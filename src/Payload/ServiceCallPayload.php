@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Payload;
+namespace Logger\Payload;
 
-use PhpLogger\Enum\HttpMethod;
-use PhpLogger\Enum\LogType;
-use PhpLogger\Exception\InvalidLogEventException;
-use PhpLogger\Support\Assert;
+use Logger\Enum\HttpMethod;
+use Logger\Enum\LogType;
+use Logger\Exception\InvalidLogEventException;
+use Logger\Support\Assert;
 
 /**
  * Outbound HTTP call.

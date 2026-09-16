@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Channel;
+namespace Logger\Channel;
 
-use PhpLogger\Exception\InvalidConfigurationException;
+use Logger\Exception\InvalidConfigurationException;
 
 final class ChannelRegistry
 {

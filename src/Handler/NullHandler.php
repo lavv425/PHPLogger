@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Handler;
+namespace Logger\Handler;
 
-use PhpLogger\Contract\LogRecord;
+use Logger\Contract\LogRecord;
 
 /** Discards everything. Useful to switch a channel off from configuration. */
 final class NullHandler implements HandlerInterface

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Handler;
+namespace Logger\Handler;
 
-use PhpLogger\Contract\LogRecord;
-use PhpLogger\Exception\HandlerFailure;
+use Logger\Contract\LogRecord;
+use Logger\Exception\HandlerFailure;
 
 interface HandlerInterface
 {

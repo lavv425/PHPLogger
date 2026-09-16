@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger;
+namespace Logger;
 
 use DateTimeZone;
-use PhpLogger\Context\ContextProvider;
-use PhpLogger\Contract\LogPayload;
-use PhpLogger\Contract\LogRecord;
-use PhpLogger\Exception\InvalidLogEventException;
-use PhpLogger\Support\Assert;
-use PhpLogger\Support\Clock;
+use Logger\Context\ContextProvider;
+use Logger\Contract\LogPayload;
+use Logger\Contract\LogRecord;
+use Logger\Exception\InvalidLogEventException;
+use Logger\Support\Assert;
+use Logger\Support\Clock;
 
 /**
  * Turns a payload plus the ambient context into a validated envelope.

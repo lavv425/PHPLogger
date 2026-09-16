@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Contract;
+namespace Logger\Contract;
 
-use PhpLogger\Enum\ErrorType;
-use PhpLogger\Enum\PhpSeverity;
+use Logger\Enum\ErrorType;
+use Logger\Enum\PhpSeverity;
 use Throwable;
 
 /**

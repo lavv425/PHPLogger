@@ -2,33 +2,33 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger;
+namespace Logger;
 
-use PhpLogger\Channel\Channel;
-use PhpLogger\Channel\ChannelRegistry;
-use PhpLogger\Config\ChannelConfig;
-use PhpLogger\Config\Config;
-use PhpLogger\Context\ContextProvider;
-use PhpLogger\Context\MutableContextProvider;
-use PhpLogger\Context\Pseudonymizer;
-use PhpLogger\Context\ServerContextFactory;
-use PhpLogger\Formatter\FormatterInterface;
-use PhpLogger\Formatter\JsonFormatter;
-use PhpLogger\Handler\CircuitBreakerHandler;
-use PhpLogger\Handler\ErrorLogHandler;
-use PhpLogger\Handler\HandlerInterface;
-use PhpLogger\Handler\InMemoryHandler;
-use PhpLogger\Handler\NullHandler;
-use PhpLogger\Handler\StreamHandler;
-use PhpLogger\Processor\SamplingProcessor;
-use PhpLogger\Sanitize\SanitizingGate;
-use PhpLogger\Sanitize\Scrubber;
-use PhpLogger\Sanitize\StatementNormalizer;
-use PhpLogger\Sanitize\Truncator;
-use PhpLogger\Support\Clock;
-use PhpLogger\Support\FailSafe;
-use PhpLogger\Support\ReentrancyGuard;
-use PhpLogger\Support\SystemClock;
+use Logger\Channel\Channel;
+use Logger\Channel\ChannelRegistry;
+use Logger\Config\ChannelConfig;
+use Logger\Config\Config;
+use Logger\Context\ContextProvider;
+use Logger\Context\MutableContextProvider;
+use Logger\Context\Pseudonymizer;
+use Logger\Context\ServerContextFactory;
+use Logger\Formatter\FormatterInterface;
+use Logger\Formatter\JsonFormatter;
+use Logger\Handler\CircuitBreakerHandler;
+use Logger\Handler\ErrorLogHandler;
+use Logger\Handler\HandlerInterface;
+use Logger\Handler\InMemoryHandler;
+use Logger\Handler\NullHandler;
+use Logger\Handler\StreamHandler;
+use Logger\Processor\SamplingProcessor;
+use Logger\Sanitize\SanitizingGate;
+use Logger\Sanitize\Scrubber;
+use Logger\Sanitize\StatementNormalizer;
+use Logger\Sanitize\Truncator;
+use Logger\Support\Clock;
+use Logger\Support\FailSafe;
+use Logger\Support\ReentrancyGuard;
+use Logger\Support\SystemClock;
 
 /**
  * Wires the pipeline from a validated configuration.

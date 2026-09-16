@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Payload;
+namespace Logger\Payload;
 
-use PhpLogger\Contract\LogError;
-use PhpLogger\Enum\LogType;
-use PhpLogger\Enum\PhpSeverity;
+use Logger\Contract\LogError;
+use Logger\Enum\LogType;
+use Logger\Enum\PhpSeverity;
 use Throwable;
 
 /**

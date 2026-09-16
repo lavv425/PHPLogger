@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Formatter;
+namespace Logger\Formatter;
 
-use PhpLogger\Contract\LogRecord;
+use Logger\Contract\LogRecord;
 
 interface FormatterInterface
 {

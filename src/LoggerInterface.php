@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger;
+namespace Logger;
 
-use PhpLogger\Contract\LogPayload;
+use Logger\Contract\LogPayload;
 
 interface LoggerInterface
 {

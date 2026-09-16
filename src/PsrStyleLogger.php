@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger;
+namespace Logger;
 
-use PhpLogger\Contract\LogError;
-use PhpLogger\Enum\Level;
-use PhpLogger\Payload\PhpLogPayload;
-use PhpLogger\Support\Assert;
+use Logger\Contract\LogError;
+use Logger\Enum\Level;
+use Logger\Payload\PhpLogPayload;
+use Logger\Support\Assert;
 use Throwable;
 
 /**

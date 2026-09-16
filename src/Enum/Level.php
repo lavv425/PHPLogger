@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Enum;
+namespace Logger\Enum;
 
 use InvalidArgumentException;
 

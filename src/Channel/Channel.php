@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Channel;
+namespace Logger\Channel;
 
-use PhpLogger\Contract\LogRecord;
-use PhpLogger\Enum\Level;
-use PhpLogger\Exception\HandlerFailure;
-use PhpLogger\Handler\HandlerInterface;
-use PhpLogger\Processor\ProcessorInterface;
+use Logger\Contract\LogRecord;
+use Logger\Enum\Level;
+use Logger\Exception\HandlerFailure;
+use Logger\Handler\HandlerInterface;
+use Logger\Processor\ProcessorInterface;
 
 /**
  * A named destination group: level floor, processors, handlers.

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Formatter;
+namespace Logger\Formatter;
 
 use JsonException;
-use PhpLogger\Contract\LogRecord;
-use PhpLogger\Exception\SanitizationFailure;
+use Logger\Contract\LogRecord;
+use Logger\Exception\SanitizationFailure;
 
 /**
  * Newline delimited JSON, one record per line.

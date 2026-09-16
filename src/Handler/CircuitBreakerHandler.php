@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Handler;
+namespace Logger\Handler;
 
-use PhpLogger\Contract\LogRecord;
-use PhpLogger\Exception\HandlerFailure;
-use PhpLogger\Support\Clock;
+use Logger\Contract\LogRecord;
+use Logger\Exception\HandlerFailure;
+use Logger\Support\Clock;
 
 /**
  * Stops hammering a destination that keeps failing.

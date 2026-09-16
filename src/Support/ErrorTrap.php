@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Support;
+namespace Logger\Support;
 
 /**
  * Runs an I/O call with warnings captured instead of raised, without the "@"

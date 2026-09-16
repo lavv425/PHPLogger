@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Enum;
+namespace Logger\Enum;
 
 /**
  * Built-in log types. Custom payloads may declare their own value; the pipeline

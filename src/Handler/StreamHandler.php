@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Handler;
+namespace Logger\Handler;
 
-use PhpLogger\Contract\LogRecord;
-use PhpLogger\Exception\HandlerFailure;
-use PhpLogger\Formatter\FormatterInterface;
-use PhpLogger\Support\ErrorTrap;
+use Logger\Contract\LogRecord;
+use Logger\Exception\HandlerFailure;
+use Logger\Formatter\FormatterInterface;
+use Logger\Support\ErrorTrap;
 
 /**
  * Writes to a stream target, php://stdout by default.

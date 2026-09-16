@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Handler;
+namespace Logger\Handler;
 
-use PhpLogger\Contract\LogRecord;
-use PhpLogger\Formatter\FormatterInterface;
-use PhpLogger\Formatter\JsonFormatter;
+use Logger\Contract\LogRecord;
+use Logger\Formatter\FormatterInterface;
+use Logger\Formatter\JsonFormatter;
 
 /** Test destination: keeps records and their rendered lines in memory. */
 final class InMemoryHandler implements HandlerInterface

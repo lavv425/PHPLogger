@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Context;
+namespace Logger\Context;
 
 /**
  * Holds the context for the current request. Mutable on purpose: the user id is

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Processor;
+namespace Logger\Processor;
 
 use Exception;
-use PhpLogger\Contract\LogRecord;
-use PhpLogger\Enum\Level;
-use PhpLogger\Enum\Outcome;
+use Logger\Contract\LogRecord;
+use Logger\Enum\Level;
+use Logger\Enum\Outcome;
 
 /**
  * Drops a share of high volume log types.

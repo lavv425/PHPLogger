@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Payload;
+namespace Logger\Payload;
 
-use PhpLogger\Contract\LogError;
-use PhpLogger\Contract\LogPayload;
-use PhpLogger\Enum\Level;
-use PhpLogger\Enum\Outcome;
-use PhpLogger\Support\Assert;
+use Logger\Contract\LogError;
+use Logger\Contract\LogPayload;
+use Logger\Enum\Level;
+use Logger\Enum\Outcome;
+use Logger\Support\Assert;
 
 /**
  * Shared envelope-facing state for the built-in payloads.

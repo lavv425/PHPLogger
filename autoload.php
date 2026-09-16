@@ -9,7 +9,7 @@ declare(strict_types=1);
  * already matches PSR-4, so a future Composer setup needs no code change.
  */
 
-const PHP_LOGGER_NAMESPACE_PREFIX = 'PhpLogger\\';
+const PHP_LOGGER_NAMESPACE_PREFIX = 'Logger\\';
 
 spl_autoload_register(static function (string $class): void {
     $prefix = PHP_LOGGER_NAMESPACE_PREFIX;

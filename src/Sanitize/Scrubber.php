@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Sanitize;
+namespace Logger\Sanitize;
 
-use PhpLogger\Support\Text;
+use Logger\Support\Text;
 
 /**
  * Best-effort masking of secrets and personal data found in free text.

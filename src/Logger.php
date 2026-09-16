@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger;
+namespace Logger;
 
-use PhpLogger\Channel\ChannelRegistry;
-use PhpLogger\Contract\LogPayload;
-use PhpLogger\Exception\InvalidLogEventException;
-use PhpLogger\Sanitize\SanitizingGate;
-use PhpLogger\Support\FailSafe;
-use PhpLogger\Support\ReentrancyGuard;
+use Logger\Channel\ChannelRegistry;
+use Logger\Contract\LogPayload;
+use Logger\Exception\InvalidLogEventException;
+use Logger\Sanitize\SanitizingGate;
+use Logger\Support\FailSafe;
+use Logger\Support\ReentrancyGuard;
 use Throwable;
 
 /**
@@ -32,14 +32,8 @@ final class Logger implements LoggerInterface
     private bool $strictEvents;
     private ?string $pinnedChannel = null;
 
-    public function __construct(
-        RecordFactory $factory,
-        SanitizingGate $gate,
-        ChannelRegistry $registry,
-        FailSafe $failSafe,
-        ReentrancyGuard $guard,
-        bool $strictEvents = false
-    ) {
+    public function __construct(RecordFactory $factory, SanitizingGate $gate, ChannelRegistry $registry, FailSafe $failSafe, ReentrancyGuard $guard, bool $strictEvents = false)
+    {
         $this->factory = $factory;
         $this->gate = $gate;
         $this->registry = $registry;

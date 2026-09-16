@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Sanitize;
+namespace Logger\Sanitize;
 
-use PhpLogger\Config\CaptureConfig;
-use PhpLogger\Config\LimitsConfig;
-use PhpLogger\Contract\LogError;
-use PhpLogger\Contract\LogRecord;
-use PhpLogger\Enum\LogType;
-use PhpLogger\Exception\SanitizationFailure;
-use PhpLogger\Support\Text;
+use Logger\Config\CaptureConfig;
+use Logger\Config\LimitsConfig;
+use Logger\Contract\LogError;
+use Logger\Contract\LogRecord;
+use Logger\Enum\LogType;
+use Logger\Exception\SanitizationFailure;
+use Logger\Support\Text;
 use Throwable;
 
 /**

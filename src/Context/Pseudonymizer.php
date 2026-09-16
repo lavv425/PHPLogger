@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpLogger\Context;
+namespace Logger\Context;
 
 /**
  * Turns an identifier into a stable, non-reversible reference.
