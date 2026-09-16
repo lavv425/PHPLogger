@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Logger;
 
 use DateTimeZone;
-use Logger\Context\ContextProvider;
-use Logger\Contract\LogPayload;
+use Logger\Interfaces\Context\ContextProviderInterface;
+use Logger\Interfaces\Payload\LogPayloadInterface;
 use Logger\Contract\LogRecord;
 use Logger\Exception\InvalidLogEventException;
 use Logger\Support\Assert;
-use Logger\Support\Clock;
+use Logger\Interfaces\Support\ClockInterface;
 
 /**
  * Turns a payload plus the ambient context into a validated envelope.
@@ -20,15 +20,15 @@ use Logger\Support\Clock;
  */
 final class RecordFactory
 {
-    private Clock $clock;
-    private ContextProvider $contextProvider;
+    private ClockInterface $clock;
+    private ContextProviderInterface $contextProvider;
     private string $service;
     private string $env;
     private ?string $host;
 
     public function __construct(
-        Clock $clock,
-        ContextProvider $contextProvider,
+        ClockInterface $clock,
+        ContextProviderInterface $contextProvider,
         string $service,
         string $env,
         ?string $host
@@ -41,7 +41,7 @@ final class RecordFactory
     }
 
     /** @throws InvalidLogEventException */
-    public function create(LogPayload $payload, ?string $levelOverride = null): LogRecord
+    public function create(LogPayloadInterface $payload, ?string $levelOverride = null): LogRecord
     {
         $logType = Assert::name($payload->logType(), 'log_type');
         $event = Assert::name($payload->event(), 'event');

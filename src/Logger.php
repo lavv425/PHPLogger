@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Logger;
 
 use Logger\Channel\ChannelRegistry;
-use Logger\Contract\LogPayload;
 use Logger\Exception\InvalidLogEventException;
+use Logger\Interfaces\Logger\LoggerInterface;
+use Logger\Interfaces\Payload\LogPayloadInterface;
 use Logger\Sanitize\SanitizingGate;
 use Logger\Support\FailSafe;
 use Logger\Support\ReentrancyGuard;
@@ -42,7 +43,7 @@ final class Logger implements LoggerInterface
         $this->strictEvents = $strictEvents;
     }
 
-    public function log(LogPayload $payload, ?string $levelOverride = null): void
+    public function log(LogPayloadInterface $payload, ?string $levelOverride = null): void
     {
         // An error raised inside the logger must not re-enter through the
         // application error handler.
@@ -90,7 +91,7 @@ final class Logger implements LoggerInterface
         $this->registry->closeAll();
     }
 
-    private function safeLogType(LogPayload $payload): string
+    private function safeLogType(LogPayloadInterface $payload): string
     {
         try {
             return $payload->logType();

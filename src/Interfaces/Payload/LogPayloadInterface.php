@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Logger\Contract;
+namespace Logger\Interfaces\Payload;
+
+use Logger\Contract\LogError;
 
 /**
  * A log type. Implement this to add a new one: the pipeline never needs to know
  * the concrete class, and the envelope field names stay out of reach because
  * everything returned by data() is nested under "data".
  */
-interface LogPayload
+interface LogPayloadInterface
 {
     /** Discriminator written to "log_type"; must match Assert::NAME_PATTERN. */
     public function logType(): string;

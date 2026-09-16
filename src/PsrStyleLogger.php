@@ -6,6 +6,7 @@ namespace Logger;
 
 use Logger\Contract\LogError;
 use Logger\Enum\Level;
+use Logger\Interfaces\Logger\LoggerInterface;
 use Logger\Payload\PhpLogPayload;
 use Logger\Support\Assert;
 use Throwable;

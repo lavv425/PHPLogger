@@ -8,15 +8,15 @@ use Logger\Channel\Channel;
 use Logger\Channel\ChannelRegistry;
 use Logger\Config\ChannelConfig;
 use Logger\Config\Config;
-use Logger\Context\ContextProvider;
+use Logger\Interfaces\Context\ContextProviderInterface;
 use Logger\Context\MutableContextProvider;
 use Logger\Context\Pseudonymizer;
 use Logger\Context\ServerContextFactory;
-use Logger\Formatter\FormatterInterface;
+use Logger\Interfaces\Formatter\FormatterInterface;
 use Logger\Formatter\JsonFormatter;
 use Logger\Handler\CircuitBreakerHandler;
 use Logger\Handler\ErrorLogHandler;
-use Logger\Handler\HandlerInterface;
+use Logger\Interfaces\Handler\HandlerInterface;
 use Logger\Handler\InMemoryHandler;
 use Logger\Handler\NullHandler;
 use Logger\Handler\StreamHandler;
@@ -25,7 +25,7 @@ use Logger\Sanitize\SanitizingGate;
 use Logger\Sanitize\Scrubber;
 use Logger\Sanitize\StatementNormalizer;
 use Logger\Sanitize\Truncator;
-use Logger\Support\Clock;
+use Logger\Interfaces\Support\ClockInterface;
 use Logger\Support\FailSafe;
 use Logger\Support\ReentrancyGuard;
 use Logger\Support\SystemClock;
@@ -39,16 +39,16 @@ use Logger\Support\SystemClock;
 final class LoggerFactory
 {
     private Config $config;
-    private Clock $clock;
-    private ContextProvider $contextProvider;
+    private ClockInterface $clock;
+    private ContextProviderInterface $contextProvider;
     private FormatterInterface $formatter;
     /** @var array<string, HandlerInterface[]> */
     private array $handlers = [];
 
     public function __construct(
         Config $config,
-        ?ContextProvider $contextProvider = null,
-        ?Clock $clock = null,
+        ?ContextProviderInterface $contextProvider = null,
+        ?ClockInterface $clock = null,
         ?FormatterInterface $formatter = null
     ) {
         $this->config = $config;
@@ -60,8 +60,8 @@ final class LoggerFactory
     /** @param array<string, mixed> $config */
     public static function fromArray(
         array $config,
-        ?ContextProvider $contextProvider = null,
-        ?Clock $clock = null
+        ?ContextProviderInterface $contextProvider = null,
+        ?ClockInterface $clock = null
     ): Logger {
         return (new self(Config::fromArray($config), $contextProvider, $clock))->build();
     }
@@ -103,7 +103,7 @@ final class LoggerFactory
         );
     }
 
-    public function contextProvider(): ContextProvider
+    public function contextProvider(): ContextProviderInterface
     {
         return $this->contextProvider;
     }
@@ -163,7 +163,7 @@ final class LoggerFactory
         );
     }
 
-    private static function defaultContextProvider(Config $config): ContextProvider
+    private static function defaultContextProvider(Config $config): ContextProviderInterface
     {
         $pseudonymizer = new Pseudonymizer($config->pepper());
         $server = isset($_SERVER) && is_array($_SERVER) ? $_SERVER : [];

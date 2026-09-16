@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Logger\Exception;
 
+use Logger\Interfaces\Exception\LoggerExceptionInterface;
 use RuntimeException;
 
 /**
@@ -11,6 +12,6 @@ use RuntimeException;
  * dropped everywhere, including the fail-safe path: an unsanitized record is
  * never written.
  */
-final class SanitizationFailure extends RuntimeException implements LoggerException
+final class SanitizationFailure extends RuntimeException implements LoggerExceptionInterface
 {
 }

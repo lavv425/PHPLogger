@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Logger\Formatter;
+namespace Logger\Interfaces\Formatter;
 
 use Logger\Contract\LogRecord;
 

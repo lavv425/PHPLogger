@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Logger\Exception;
 
 use InvalidArgumentException;
+use Logger\Interfaces\Exception\LoggerExceptionInterface;
 
 /**
  * Thrown when a caller builds an event with invalid data. Propagated when
  * strict_events is on (development, CI), converted into a meta record otherwise.
  */
-final class InvalidLogEventException extends InvalidArgumentException implements LoggerException
+final class InvalidLogEventException extends InvalidArgumentException implements LoggerExceptionInterface
 {
     public static function forField(string $field, string $reason): self
     {

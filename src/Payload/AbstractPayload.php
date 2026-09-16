@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Logger\Payload;
 
 use Logger\Contract\LogError;
-use Logger\Contract\LogPayload;
+use Logger\Interfaces\Payload\LogPayloadInterface;
 use Logger\Enum\Level;
 use Logger\Enum\Outcome;
 use Logger\Support\Assert;
@@ -17,7 +17,7 @@ use Logger\Support\Assert;
  * readonly properties, so immutability is enforced by keeping state private and
  * exposing no setters.
  */
-abstract class AbstractPayload implements LogPayload
+abstract class AbstractPayload implements LogPayloadInterface
 {
     private string $event;
     private string $outcome = Outcome::UNKNOWN;

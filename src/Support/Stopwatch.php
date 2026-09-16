@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Logger\Support;
 
+use Logger\Interfaces\Support\ClockInterface;
+
 /**
  * Measures duration and nothing else. Interpreting the result of the measured
  * operation belongs to the caller or to a dedicated integration adapter: an
@@ -11,16 +13,16 @@ namespace Logger\Support;
  */
 final class Stopwatch
 {
-    private Clock $clock;
+    private ClockInterface $clock;
     private float $startedAt;
 
-    private function __construct(Clock $clock)
+    private function __construct(ClockInterface $clock)
     {
         $this->clock = $clock;
         $this->startedAt = $clock->elapsedReference();
     }
 
-    public static function start(?Clock $clock = null): self
+    public static function start(?ClockInterface $clock = null): self
     {
         return new self($clock ?? new SystemClock());
     }

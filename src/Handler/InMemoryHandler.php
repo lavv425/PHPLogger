@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Logger\Handler;
 
 use Logger\Contract\LogRecord;
-use Logger\Formatter\FormatterInterface;
 use Logger\Formatter\JsonFormatter;
+use Logger\Interfaces\Formatter\FormatterInterface;
+use Logger\Interfaces\Handler\HandlerInterface;
 
 /** Test destination: keeps records and their rendered lines in memory. */
 final class InMemoryHandler implements HandlerInterface
