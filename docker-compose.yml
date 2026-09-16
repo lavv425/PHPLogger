@@ -1,0 +1,56 @@
+# Runs the suite on PHP 7.4.3, the oldest supported runtime.
+#
+#   docker compose run --rm test                    the whole suite
+#   docker compose run --rm test --testsuite unit   any PHPUnit argument
+#   docker compose run --rm coverage                the suite with a coverage report
+#   docker compose run --rm php -v                  a PHP 7.4.3 command line
+#   docker compose run --rm composer update         dependency work
+#
+# The project is bind mounted so edits are picked up without rebuilding, while
+# vendor/ stays the copy baked into the image: the host may be on a different
+# PHP version, and its vendor/ must not leak into the container.
+
+services:
+  test:
+    build: .
+    image: phplogger:7.4.3
+    volumes:
+      - .:/app
+      - /app/vendor
+    entrypoint: ["vendor/bin/phpunit"]
+    command: []
+
+  coverage:
+    build: .
+    image: phplogger:7.4.3
+    volumes:
+      - .:/app
+      - /app/vendor
+    environment:
+      # Adds docker/php/pcov.ini on top of the image configuration, which ships
+      # pcov disabled because it slows every ordinary run down.
+      PHP_INI_SCAN_DIR: "/usr/local/etc/php/conf.d:/app/docker/php"
+    entrypoint: ["vendor/bin/phpunit", "--coverage-text", "--coverage-html", "build/coverage"]
+    command: []
+
+  php:
+    build: .
+    image: phplogger:7.4.3
+    volumes:
+      - .:/app
+      - /app/vendor
+    entrypoint: ["php"]
+    command: ["-v"]
+
+  # Dependency maintenance. It runs in the Composer image rather than in the
+  # 7.4.3 one, which has neither unzip nor ext-zip; composer.json pins
+  # config.platform.php to 7.4.3, so what it resolves still targets that
+  # runtime. It writes vendor/ and composer.lock to the host — rebuild the
+  # image afterwards so the baked copy catches up.
+  composer:
+    image: composer:2.2
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: ["composer"]
+    command: ["install"]
