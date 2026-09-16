@@ -54,14 +54,8 @@ final class PhpLogPayload extends AbstractPayload
     /**
      * @param string[]|null $stackTrace
      */
-    public static function fromPhpError(
-        string $event,
-        int $severity,
-        string $message,
-        string $file,
-        int $line,
-        ?array $stackTrace = null
-    ): self {
+    public static function fromPhpError(string $event, int $severity, string $message, string $file, int $line, ?array $stackTrace = null): self
+    {
         $payload = new self($event);
         $payload->message = $message;
         $payload->file = $file;

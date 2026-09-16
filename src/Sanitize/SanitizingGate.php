@@ -33,13 +33,8 @@ final class SanitizingGate
     private StatementNormalizer $normalizer;
     private LimitsConfig $limits;
 
-    public function __construct(
-        CaptureConfig $capture,
-        Scrubber $scrubber,
-        Truncator $truncator,
-        StatementNormalizer $normalizer,
-        LimitsConfig $limits
-    ) {
+    public function __construct(CaptureConfig $capture, Scrubber $scrubber, Truncator $truncator, StatementNormalizer $normalizer, LimitsConfig $limits)
+    {
         $this->capture = $capture;
         $this->scrubber = $scrubber;
         $this->truncator = $truncator;

@@ -40,20 +40,8 @@ final class LogRecord
      * @param array<string, string|null> $correlation
      * @param array<string, mixed> $data
      */
-    public function __construct(
-        DateTimeImmutable $timestamp,
-        string $level,
-        string $service,
-        string $env,
-        ?string $host,
-        string $logType,
-        string $event,
-        string $outcome,
-        ?float $duration,
-        ?LogError $error,
-        array $correlation,
-        array $data
-    ) {
+    public function __construct(DateTimeImmutable $timestamp, string $level, string $service, string $env, ?string $host, string $logType, string $event, string $outcome, ?float $duration, ?LogError $error, array $correlation, array $data)
+    {
         $this->timestamp = $timestamp;
         $this->level = $level;
         $this->service = $service;

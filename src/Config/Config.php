@@ -39,23 +39,8 @@ final class Config
      * @param array<string, string> $routing
      * @param array<string, float> $sampling
      */
-    private function __construct(
-        string $service,
-        string $env,
-        ?string $host,
-        bool $strictEvents,
-        string $pepper,
-        string $defaultChannel,
-        array $channels,
-        array $routing,
-        array $sampling,
-        CaptureConfig $capture,
-        LimitsConfig $limits,
-        string $failSafeTarget,
-        int $failSafeMaxRecords,
-        int $breakerFailureThreshold,
-        int $breakerCooldownSeconds
-    ) {
+    private function __construct(string $service, string $env, ?string $host, bool $strictEvents, string $pepper, string $defaultChannel, array $channels, array $routing, array $sampling, CaptureConfig $capture, LimitsConfig $limits, string $failSafeTarget, int $failSafeMaxRecords, int $breakerFailureThreshold, int $breakerCooldownSeconds)
+    {
         $this->service = $service;
         $this->env = $env;
         $this->host = $host;

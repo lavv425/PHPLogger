@@ -25,12 +25,8 @@ final class CircuitBreakerHandler implements HandlerInterface
     private int $failures = 0;
     private ?float $openedAt = null;
 
-    public function __construct(
-        HandlerInterface $inner,
-        ClockInterface $clock,
-        int $failureThreshold = 5,
-        int $cooldownSeconds = 30
-    ) {
+    public function __construct(HandlerInterface $inner, ClockInterface $clock, int $failureThreshold = 5, int $cooldownSeconds = 30)
+    {
         $this->inner = $inner;
         $this->clock = $clock;
         $this->failureThreshold = $failureThreshold;
