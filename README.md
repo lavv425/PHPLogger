@@ -27,6 +27,21 @@ Change `PHP_LOGGER_NAMESPACE_PREFIX` there to the company namespace — the
 directory layout already matches PSR-4, so nothing else has to change, today or
 the day Composer becomes an option.
 
+### Layout
+
+Implementations sit under `src/<Module>/`. Every **interface** lives under
+`src/Interfaces/<Module>/<Name>Interface.php`, namespaced
+`Logger\Interfaces\<Module>`, so the contracts are all in one place:
+
+```
+src/Interfaces/Handler/HandlerInterface.php   Logger\Interfaces\Handler\HandlerInterface
+src/Interfaces/Context/ContextProviderInterface.php
+src/Handler/StreamHandler.php                 implements the first
+```
+
+`Logger\Contract` keeps `LogRecord` and `LogError`: those are concrete value
+objects, not contracts.
+
 ## Quick start
 
 ```php
@@ -165,20 +180,37 @@ intended default.
 ## Tests
 
 ```bash
-php tests/run.php            # everything
-php tests/run.php Sanitize   # filter by name
+composer install             # PHPUnit only, see below
+vendor/bin/phpunit           # everything
+vendor/bin/phpunit --testsuite unit
+vendor/bin/phpunit --filter Sanitize
 ```
 
-PHPUnit needs Composer, so the project ships its own runner (`tests/run.php`,
-exit code 1 on failure, ready for CI). The golden files in `tests/golden/` pin
-the JSON contract: any change to a field name, type or order fails the suite on
-purpose — see the compatibility policy in [SCHEMA.md](SCHEMA.md).
+Composer is **dev-only tooling here**. It installs PHPUnit and autoloads the
+`Logger\Tests\` namespace; the library itself is still loaded through the
+`autoload.php` that ships with the package, which `tests/bootstrap.php` requires
+on purpose so that autoloader cannot rot. Nothing in `src/` has a runtime
+dependency, and copying the directory into a project keeps working exactly as
+before.
 
-To check the minimum supported version:
+`tests/Integration/SchemaContractTest.php` pins the wire format: any change to a
+field name, type or order fails the suite on purpose — see the compatibility
+policy in [SCHEMA.md](SCHEMA.md).
+
+Tests run in random order, so a test that depends on another one fails quickly.
+
+### On the minimum supported version
+
+The suite is meant to pass on the oldest supported runtime, not only on the
+developer machine:
 
 ```bash
-docker run --rm -v "$PWD":/app -w /app php:7.4-cli php tests/run.php
+docker compose run --rm test        # PHPUnit on PHP 7.4.3
+docker compose run --rm coverage    # the same, with a coverage report
+docker compose run --rm php -v      # a shell-friendly PHP 7.4.3
 ```
+
+See [docker-compose.yml](docker-compose.yml).
 
 ## Not included yet
 
