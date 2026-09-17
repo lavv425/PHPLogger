@@ -116,16 +116,30 @@ final class Scrubber
             '/\b[Bb]asic\s+[A-Za-z0-9+\/]+=*/' => 'Basic ' . $mask,
             // JSON Web Tokens.
             '/\beyJ[A-Za-z0-9_-]{6,}\.[A-Za-z0-9_-]{6,}\.[A-Za-z0-9_-]{6,}/' => $mask,
-            // Secrets passed in a query string.
-            '/([?&](?:password|passwd|pwd|token|access_token|api_key|apikey|secret|signature|sig|auth)=)[^&\s]*/i'
+            // Secrets passed in a query string. The separator is optional on
+            // the left: a bare query string, which is what parse_url() returns
+            // and what ServiceCallPayload stores, starts its first parameter
+            // with no "?" or "&" in front of it.
+            '/((?:^|[?&;\s])(?:password|passwd|pwd|token|access_token|api_key|apikey|secret|signature|sig|auth)=)[^&\s]*/i'
                 => '$1' . $mask,
             // Personal data.
             '/[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}/' => $mask,
             '/\b[A-Z]{2}\d{2}[A-Z0-9]{11,30}\b/' => $mask,
             '/\b[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]\b/i' => $mask,
             // Long opaque strings: api keys, hashes, base64 blobs.
+            //
+            // "/" is deliberately NOT part of the base64 run. It is a valid
+            // base64 character, but including it made the rule swallow every
+            // filesystem path longer than the threshold: a deployment path such
+            // as /var/www/html/app/Http/Controllers/CheckoutController.php came
+            // out as /***.php, which destroyed data.file and every stack frame.
+            // Treating "/" as a separator keeps paths readable, because their
+            // individual segments are far below the threshold. The cost is that
+            // a standard-base64 blob whose slashes fall close together can slip
+            // through; the hex and JWT rules above still cover the common
+            // shapes, and the allow-list is the actual guarantee.
             '/\b[0-9a-fA-F]{32,}\b/' => $mask,
-            '/\b[A-Za-z0-9+\/]{40,}={0,2}\b/' => $mask,
+            '/\b[A-Za-z0-9+]{40,}={0,2}\b/' => $mask,
         ];
     }
 
