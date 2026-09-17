@@ -128,6 +128,11 @@ check. A secret in an unexpected shape gets through. Do not rely on it as the
 only line of defence, and note that it is deliberately aggressive: a long opaque
 string in a payload may be masked even when it was harmless.
 
+Filesystem paths are the one shape explicitly kept out of that rule, so
+`data.file` and the frames in `error.stack_trace` stay readable. The cost is
+that a standard-base64 blob whose slashes happen to fall close together can slip
+past; the hex and JWT rules still cover the common shapes.
+
 Cookies are never emitted, in any configuration.
 
 ## What happens when something breaks
@@ -179,38 +184,58 @@ intended default.
 
 ## Tests
 
+There are two ways to get a working suite. Pick either one; they run the same
+tests.
+
+**With Docker — nothing needed on the host.** No PHP, no Composer, no
+extension. The image builds its own `vendor/`, on the oldest runtime the package
+supports:
+
 ```bash
-composer install             # PHPUnit only, see below
-vendor/bin/phpunit           # everything
+docker compose up                                # build everything and run the suite
+docker compose run --rm test                     # the same, with a real exit code for CI
+docker compose run --rm test --testsuite unit    # any PHPUnit argument
+docker compose run --rm coverage                 # the suite with a coverage report
+docker compose run --rm php -v                   # a PHP 7.4.3 command line
+docker compose run --rm composer update          # dependency work
+```
+
+`docker compose up` starts only the test service; the others sit behind a
+profile, which `docker compose run` enables on its own. See
+[docker-compose.yml](docker-compose.yml).
+
+**With Composer — on a host that already has PHP 7.4+:**
+
+```bash
+composer install                     # installs PHPUnit, nothing else
+vendor/bin/phpunit                   # everything
 vendor/bin/phpunit --testsuite unit
 vendor/bin/phpunit --filter Sanitize
 ```
 
-Composer is **dev-only tooling here**. It installs PHPUnit and autoloads the
-`Logger\Tests\` namespace; the library itself is still loaded through the
-`autoload.php` that ships with the package, which `tests/bootstrap.php` requires
-on purpose so that autoloader cannot rot. Nothing in `src/` has a runtime
-dependency, and copying the directory into a project keeps working exactly as
-before.
+`vendor/` is generated and git-ignored; it is never committed. Coverage needs a
+driver (pcov or Xdebug), which the Docker image already ships — the `coverage`
+service is the easier route.
+
+### Why Composer is here at all
+
+Composer is **dev-only tooling**. It installs PHPUnit and autoloads the
+`Logger\Tests\` namespace, and it declares no autoload rule for the library:
+`tests/bootstrap.php` requires the `autoload.php` that ships with the package
+instead, so every test exercises the loading path a consumer actually gets and
+that file cannot rot. Nothing in `src/` has a runtime dependency, and copying
+the directory into a project keeps working exactly as before.
+
+`config.platform.php` is pinned to `7.4.3`, so Composer resolves for the oldest
+supported runtime no matter which PHP runs it.
+
+### What the suite pins
 
 `tests/Integration/SchemaContractTest.php` pins the wire format: any change to a
 field name, type or order fails the suite on purpose — see the compatibility
 policy in [SCHEMA.md](SCHEMA.md).
 
 Tests run in random order, so a test that depends on another one fails quickly.
-
-### On the minimum supported version
-
-The suite is meant to pass on the oldest supported runtime, not only on the
-developer machine:
-
-```bash
-docker compose run --rm test        # PHPUnit on PHP 7.4.3
-docker compose run --rm coverage    # the same, with a coverage report
-docker compose run --rm php -v      # a shell-friendly PHP 7.4.3
-```
-
-See [docker-compose.yml](docker-compose.yml).
 
 ## Not included yet
 
