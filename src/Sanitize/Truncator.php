@@ -74,26 +74,44 @@ final class Truncator
             }
         }
 
-        $record = $this->shrinkLongStrings($record);
+        // Shrinking loses data exactly like dropping a field does, so it counts
+        // towards the marker even when it is what brought the record under the
+        // limit on its own. Otherwise a consumer reading a shortened value has
+        // no way to tell it was cut.
+        $shrunk = false;
+        $record = $this->shrinkLongStrings($record, $shrunk);
 
-        return $this->encodedSize($record) > $this->limits->maxRecordBytes() || $truncated
+        return $truncated || $shrunk || $this->encodedSize($record) > $this->limits->maxRecordBytes()
             ? $record->withTruncated(true)
             : $record;
     }
 
-    private function shrinkLongStrings(LogRecord $record): LogRecord
+    /** @param bool $shrunk set when at least one value was actually shortened */
+    private function shrinkLongStrings(LogRecord $record, bool &$shrunk): LogRecord
     {
         $budget = (int) max(64, $this->limits->maxRecordBytes() / 8);
 
         $error = $record->error();
         if ($error !== null) {
-            $record = $record->withError($error->withMessage(Text::truncateBytes($error->message(), $budget)));
+            $message = Text::truncateBytes($error->message(), $budget);
+
+            if ($message !== $error->message()) {
+                $record = $record->withError($error->withMessage($message));
+                $shrunk = true;
+            }
         }
 
         $data = $record->data();
         foreach ($data as $key => $value) {
-            if (is_string($value)) {
-                $data[$key] = Text::truncateBytes($value, $budget);
+            if (!is_string($value)) {
+                continue;
+            }
+
+            $shortened = Text::truncateBytes($value, $budget);
+
+            if ($shortened !== $value) {
+                $data[$key] = $shortened;
+                $shrunk = true;
             }
         }
 
