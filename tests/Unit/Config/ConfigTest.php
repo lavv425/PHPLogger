@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Logger\Tests\Unit\Config;
 
+use Logger\Config\ChannelConfig;
 use Logger\Config\Config;
 use Logger\Exception\InvalidConfigurationException;
 use PHPUnit\Framework\TestCase;
@@ -12,13 +13,54 @@ final class ConfigTest extends TestCase
 {
     public function test_the_shipped_example_is_valid(): void
     {
-        $config = Config::fromArray(require __DIR__ . '/../../../config/logger.example.php');
+        $config = Config::fromArray($this->example());
 
         self::assertSame('billing-api', $config->service());
         self::assertSame('production', $config->env());
         self::assertSame('stdout', $config->defaultChannel());
         self::assertArrayHasKey('errors', $config->channels());
-        self::assertSame(['db_query' => 'stdout', 'service_call' => 'stdout', 'php_log' => 'errors'], $config->routing());
+    }
+
+    public function test_the_shipped_example_demonstrates_every_handler_type(): void
+    {
+        // The example doubles as the reference for what can be configured, so
+        // it has to keep exercising all four.
+        $types = [];
+        foreach (Config::fromArray($this->example())->channels() as $channel) {
+            foreach ($channel->handlers() as $handler) {
+                $types[$handler['type']] = true;
+            }
+        }
+
+        $found = array_keys($types);
+        sort($found, SORT_STRING);
+
+        self::assertSame([
+            ChannelConfig::HANDLER_ERROR_LOG,
+            ChannelConfig::HANDLER_MEMORY,
+            ChannelConfig::HANDLER_NULL,
+            ChannelConfig::HANDLER_STREAM,
+        ], $found);
+    }
+
+    public function test_every_routed_channel_in_the_example_exists(): void
+    {
+        $config = Config::fromArray($this->example());
+        $channels = $config->channels();
+
+        self::assertNotSame([], $config->routing(), 'the example should show routing in use');
+
+        foreach ($config->routing() as $logType => $channelName) {
+            self::assertArrayHasKey($channelName, $channels, $logType . ' is routed to a channel that does not exist');
+        }
+    }
+
+    public function test_every_sampling_rate_in_the_example_is_in_range(): void
+    {
+        foreach (Config::fromArray($this->example())->sampling() as $logType => $rate) {
+            self::assertGreaterThanOrEqual(0.0, $rate, $logType);
+            self::assertLessThanOrEqual(1.0, $rate, $logType);
+        }
     }
 
     public function test_applies_the_documented_defaults(): void
@@ -97,6 +139,12 @@ final class ConfigTest extends TestCase
         $config = Config::fromArray($this->minimal(['sampling' => ['a' => 0, 'b' => 1]]));
 
         self::assertSame(['a' => 0.0, 'b' => 1.0], $config->sampling());
+    }
+
+    /** @return array<string, mixed> */
+    private function example(): array
+    {
+        return require __DIR__ . '/../../../config/logger.example.php';
     }
 
     /**
