@@ -6,7 +6,8 @@ namespace Logger\Handler;
 
 use Logger\Contract\LogRecord;
 use Logger\Exception\HandlerFailure;
-use Logger\Formatter\FormatterInterface;
+use Logger\Interfaces\Formatter\FormatterInterface;
+use Logger\Interfaces\Handler\HandlerInterface;
 use Logger\Support\ErrorTrap;
 
 /**

@@ -8,6 +8,7 @@ use Exception;
 use Logger\Contract\LogRecord;
 use Logger\Enum\Level;
 use Logger\Enum\Outcome;
+use Logger\Interfaces\Processor\ProcessorInterface;
 
 /**
  * Drops a share of high volume log types.

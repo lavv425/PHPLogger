@@ -6,7 +6,7 @@ namespace Logger\Sanitize;
 
 use Logger\Config\LimitsConfig;
 use Logger\Contract\LogRecord;
-use Logger\Formatter\FormatterInterface;
+use Logger\Interfaces\Formatter\FormatterInterface;
 use Logger\Formatter\JsonFormatter;
 use Logger\Support\Text;
 use Throwable;

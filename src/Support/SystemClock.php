@@ -6,8 +6,9 @@ namespace Logger\Support;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Logger\Interfaces\Support\ClockInterface;
 
-final class SystemClock implements Clock
+final class SystemClock implements ClockInterface
 {
     private DateTimeZone $timezone;
 

@@ -7,8 +7,8 @@ namespace Logger\Channel;
 use Logger\Contract\LogRecord;
 use Logger\Enum\Level;
 use Logger\Exception\HandlerFailure;
-use Logger\Handler\HandlerInterface;
-use Logger\Processor\ProcessorInterface;
+use Logger\Interfaces\Handler\HandlerInterface;
+use Logger\Interfaces\Processor\ProcessorInterface;
 
 /**
  * A named destination group: level floor, processors, handlers.

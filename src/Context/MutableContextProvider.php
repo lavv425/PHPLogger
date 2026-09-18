@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Logger\Context;
 
+use Logger\Interfaces\Context\ContextProviderInterface;
+
 /**
  * Holds the context for the current request. Mutable on purpose: the user id is
  * only known after authentication, well after the logger is built.
  */
-final class MutableContextProvider implements ContextProvider
+final class MutableContextProvider implements ContextProviderInterface
 {
     private RequestContext $context;
     private Pseudonymizer $pseudonymizer;

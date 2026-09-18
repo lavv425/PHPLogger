@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Logger\Processor;
+namespace Logger\Interfaces\Processor;
 
 use Logger\Contract\LogRecord;
 

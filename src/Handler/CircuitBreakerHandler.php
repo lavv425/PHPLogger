@@ -6,7 +6,8 @@ namespace Logger\Handler;
 
 use Logger\Contract\LogRecord;
 use Logger\Exception\HandlerFailure;
-use Logger\Support\Clock;
+use Logger\Interfaces\Handler\HandlerInterface;
+use Logger\Interfaces\Support\ClockInterface;
 
 /**
  * Stops hammering a destination that keeps failing.
@@ -18,7 +19,7 @@ use Logger\Support\Clock;
 final class CircuitBreakerHandler implements HandlerInterface
 {
     private HandlerInterface $inner;
-    private Clock $clock;
+    private ClockInterface $clock;
     private int $failureThreshold;
     private int $cooldownSeconds;
     private int $failures = 0;
@@ -26,7 +27,7 @@ final class CircuitBreakerHandler implements HandlerInterface
 
     public function __construct(
         HandlerInterface $inner,
-        Clock $clock,
+        ClockInterface $clock,
         int $failureThreshold = 5,
         int $cooldownSeconds = 30
     ) {

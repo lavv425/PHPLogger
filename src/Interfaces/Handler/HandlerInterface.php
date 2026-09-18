@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Logger\Handler;
+namespace Logger\Interfaces\Handler;
 
 use Logger\Contract\LogRecord;
 use Logger\Exception\HandlerFailure;

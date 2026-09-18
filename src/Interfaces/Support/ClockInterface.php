@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Logger\Support;
+namespace Logger\Interfaces\Support;
 
 use DateTimeImmutable;
 
@@ -10,7 +10,7 @@ use DateTimeImmutable;
  * Injected everywhere time is read, so records and durations are deterministic
  * under test.
  */
-interface Clock
+interface ClockInterface
 {
     public function now(): DateTimeImmutable;
 

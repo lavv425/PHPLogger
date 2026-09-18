@@ -7,6 +7,7 @@ namespace Logger\Formatter;
 use JsonException;
 use Logger\Contract\LogRecord;
 use Logger\Exception\SanitizationFailure;
+use Logger\Interfaces\Formatter\FormatterInterface;
 
 /**
  * Newline delimited JSON, one record per line.
