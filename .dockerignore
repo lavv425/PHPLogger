@@ -1,0 +1,8 @@
+.git
+.github
+vendor
+build
+coverage
+.phpunit.result.cache
+.vscode
+.DS_Store

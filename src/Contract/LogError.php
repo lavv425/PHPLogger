@@ -28,15 +28,8 @@ final class LogError
     /**
      * @param string[]|null $stackTrace
      */
-    public function __construct(
-        string $type,
-        string $message,
-        ?string $code = null,
-        ?string $class = null,
-        ?string $severity = null,
-        ?int $severityCode = null,
-        ?array $stackTrace = null
-    ) {
+    public function __construct(string $type, string $message, ?string $code = null, ?string $class = null, ?string $severity = null, ?int $severityCode = null, ?array $stackTrace = null)
+    {
         $this->type = ErrorType::isValid($type) ? $type : ErrorType::OTHER;
         $this->message = $message;
         $this->code = $code;

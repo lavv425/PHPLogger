@@ -17,12 +17,8 @@ final class RequestContext
     private ?string $userRef;
     private ?string $userAgent;
 
-    public function __construct(
-        ?string $requestId = null,
-        ?string $sessionRef = null,
-        ?string $userRef = null,
-        ?string $userAgent = null
-    ) {
+    public function __construct(?string $requestId = null, ?string $sessionRef = null, ?string $userRef = null, ?string $userAgent = null)
+    {
         $this->requestId = $requestId;
         $this->sessionRef = $sessionRef;
         $this->userRef = $userRef;

@@ -26,13 +26,8 @@ final class RecordFactory
     private string $env;
     private ?string $host;
 
-    public function __construct(
-        ClockInterface $clock,
-        ContextProviderInterface $contextProvider,
-        string $service,
-        string $env,
-        ?string $host
-    ) {
+    public function __construct(ClockInterface $clock, ContextProviderInterface $contextProvider, string $service, string $env, ?string $host)
+    {
         $this->clock = $clock;
         $this->contextProvider = $contextProvider;
         $this->service = $service;

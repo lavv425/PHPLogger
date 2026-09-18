@@ -45,12 +45,8 @@ final class LoggerFactory
     /** @var array<string, HandlerInterface[]> */
     private array $handlers = [];
 
-    public function __construct(
-        Config $config,
-        ?ContextProviderInterface $contextProvider = null,
-        ?ClockInterface $clock = null,
-        ?FormatterInterface $formatter = null
-    ) {
+    public function __construct(Config $config, ?ContextProviderInterface $contextProvider = null, ?ClockInterface $clock = null, ?FormatterInterface $formatter = null)
+    {
         $this->config = $config;
         $this->clock = $clock ?? new SystemClock();
         $this->formatter = $formatter ?? new JsonFormatter();
@@ -58,11 +54,8 @@ final class LoggerFactory
     }
 
     /** @param array<string, mixed> $config */
-    public static function fromArray(
-        array $config,
-        ?ContextProviderInterface $contextProvider = null,
-        ?ClockInterface $clock = null
-    ): Logger {
+    public static function fromArray(array $config, ?ContextProviderInterface $contextProvider = null, ?ClockInterface $clock = null): Logger
+    {
         return (new self(Config::fromArray($config), $contextProvider, $clock))->build();
     }
 
