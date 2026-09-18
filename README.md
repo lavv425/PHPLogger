@@ -182,6 +182,86 @@ The pipeline never needs to know the concrete class. Remember to allow-list any
 array-valued field in `capture.fields`, otherwise it is dropped — which is the
 intended default.
 
+## Adapters
+
+`src/Adapter/` holds the three integration points most applications need. They
+are the only part of the package that knows anything about PDO, cURL or PHP's
+error machinery, and the judgement they cannot make on their own — did this
+operation succeed? — is always injected rather than hard-coded.
+
+### Database
+
+`LoggingPdo` is a `PDO` subclass, so it drops into any signature that already
+type-hints `PDO`:
+
+```php
+$pdo = new LoggingPdo($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION], $logger, 'production_db');
+$pdo->prepare('SELECT id FROM users WHERE tenant_id = ?')->execute([$tenantId]);
+```
+
+It needs four interception points, not one. Prepared statements report from
+`LoggingStatement`, but `exec()` and `query()` never build one, and SQLite and
+PostgreSQL reject a broken statement inside `prepare()` itself, so `execute()` is
+never reached. A failure is recorded **before** the exception is rethrown: with
+`ERRMODE_EXCEPTION` the failed queries are precisely the ones a wrapper that logs
+after the call would lose.
+
+Values bound with `bindValue()` and `bindParam()` are captured as well, the
+latter by reference so the value logged is the one actually sent. What reaches
+the log is still decided by `capture.fields`.
+
+### Outbound HTTP
+
+There is nothing to subclass — a handle is a `resource` on 7.4 and a
+`CurlHandle` on 8.0+ — so the adapter is a collaborator around `curl_exec()`:
+
+```php
+$recorder = new CurlRecorder($logger);              // or: new CurlRecorder($logger, $policy)
+$body = $recorder->execute($handle, 'GET');         // drop-in for curl_exec()
+$recorder->record($handle, 'POST');                 // when curl_multi owns the call
+```
+
+The whole timing breakdown comes from `curl_getinfo()`, so the caller measures
+nothing. Whether a status counts as a failure is `HttpOutcomePolicyInterface`:
+`StatusHttpOutcomePolicy` treats a transport error and anything from 400 up as a
+failure, and a transfer with no status at all as `unknown` rather than claiming a
+success nobody observed. An API where 404 means "not found, which is fine" ships
+its own policy.
+
+### PHP errors
+
+```php
+(new ErrorHandlerBridge($logger))->register();
+```
+
+Three hooks, because PHP reports failures in three unrelated ways. Nothing is
+swallowed: the error handler returns `false` so normal handling continues, the
+previous handlers are chained rather than replaced, and an uncaught exception is
+rethrown so the process still dies the way PHP intended.
+
+Two details that are easy to get wrong, and are covered by tests:
+
+- **Suppression is honoured** through `(error_reporting() & $severity) === 0`,
+  which catches both the `@` operator and severities switched off in `php.ini`.
+- **A fatal is reported once.** An uncaught exception leaves an `E_ERROR` behind
+  when it is rethrown, and `E_USER_ERROR` reaches the error handler *and* ends
+  the request; both would otherwise be filed twice.
+
+A buffer is reserved at `register()` and released at shutdown, because an
+out-of-memory fatal leaves nothing to allocate — not even the record describing
+it. Set the first constructor argument to `0` to switch that off.
+
+Stack traces for non-fatal errors are off by default; enabling them uses
+`DEBUG_BACKTRACE_IGNORE_ARGS`, since the arguments are what leaks a password into
+a log line.
+
+### On PHP 8
+
+`PDO::prepare()`, `exec()` and `query()` declare union return types that PHP 7.4
+cannot express, so the overrides carry `#[\ReturnTypeWillChange]`. On 7.4 the
+attribute is read as a comment; on 8.x it keeps the deprecation notice away. The
+adapters are exercised on 7.4.3, 8.1 and 8.3.
+
 ## Tests
 
 There are two ways to get a working suite. Pick either one; they run the same
@@ -239,7 +319,18 @@ Tests run in random order, so a test that depends on another one fails quickly.
 
 ## Not included yet
 
-Integration adapters (PDO, cURL, `set_error_handler` / `set_exception_handler` /
-`register_shutdown_function`) are deliberately out of the core: deciding whether
-an operation succeeded belongs to them, not to a generic wrapper. A `Stopwatch`
-that only measures duration is provided in the meantime.
+Integration adapters for PDO, cURL and PHP's error handlers now ship in
+`src/Adapter/` — see [Adapters](#adapters). They stay out of the pipeline
+proper: the judgement they exist to make, whether an operation succeeded, is
+injected rather than decided by the core.
+
+Still missing:
+
+- **Asynchronous delivery.** Writes happen on the request path; there is no
+  queueing and no batching. The circuit breaker covers a destination that is
+  down, not the cost of writing itself.
+- **An adapter per query event.** `LoggingPdo` logs every query under one event
+  name. Code that wants `user_lookup` and `invoice_fetch` told apart builds its
+  own payload, or wires a second instance.
+- **Static analysis and a CI pipeline.** The Docker environment runs the suite
+  on the minimum supported runtime, but nothing runs it automatically.
