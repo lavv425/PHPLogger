@@ -107,22 +107,35 @@ final class TruncatorTest extends TestCase
         self::assertLessThan(5000, strlen($truncated->data()['note']));
     }
 
-    /**
-     * Pins current behaviour, which is inconsistent with the rest of the class:
-     * shrinking a string loses data just like dropping a field does, but when
-     * the shrink alone brings the record under the limit the record is returned
-     * without the flag, so a consumer cannot tell it was cut.
-     *
-     * TODO(tech-debt): set _truncated when shrinkLongStrings() actually changed
-     * the record, then flip this test to assert true.
-     */
-    public function test_a_record_saved_by_shrinking_alone_is_not_flagged(): void
+    public function test_a_record_saved_by_shrinking_alone_is_still_flagged(): void
     {
+        // Shrinking loses data like dropping a field does, so the consumer has
+        // to be told even when nothing else was sacrificed.
         $record = RecordBuilder::make(['note' => str_repeat('x', 5000)]);
 
         $truncated = (new Truncator($this->limits(600)))->truncate($record);
 
+        self::assertTrue($truncated->isTruncated());
+    }
+
+    public function test_a_record_that_needed_no_shrinking_is_not_flagged(): void
+    {
+        $record = RecordBuilder::make(['note' => 'short', 'count' => 3]);
+
+        $truncated = (new Truncator($this->limits(4096)))->truncate($record);
+
         self::assertFalse($truncated->isTruncated());
+        self::assertSame(['note' => 'short', 'count' => 3], $truncated->data());
+    }
+
+    public function test_an_oversized_error_message_is_shrunk_and_flagged(): void
+    {
+        $error = new LogError(ErrorType::EXCEPTION, str_repeat('boom ', 400));
+
+        $truncated = (new Truncator($this->limits(600)))->truncate(RecordBuilder::make([], 'error', 'php_log', 'failure', null, $error));
+
+        self::assertTrue($truncated->isTruncated());
+        self::assertLessThan(2000, strlen($truncated->error()->message()));
     }
 
     public function test_flags_a_record_that_stays_oversized_after_every_strategy(): void

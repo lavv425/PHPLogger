@@ -86,23 +86,17 @@ final class PipelineTest extends TestCase
         self::assertSame('https://api.example.com/v1/items?api_key=***&page=2', $harness->lastRecord()['data']['url']);
     }
 
-    /**
-     * Pins a real leak. The query-string rule anchors on "?" or "&", but
-     * ServiceCallPayload stores query_string as parse_url() returns it, with no
-     * leading "?", so the FIRST parameter is never masked. The same secret is
-     * correctly masked in "url" on the very same record.
-     *
-     * TODO(tech-debt): anchor the rule on a string start as well, or have the
-     * payload keep the leading "?". Then flip this to assert the mask.
-     */
-    public function test_the_first_query_string_parameter_escapes_the_scrubber(): void
+    public function test_the_first_query_string_parameter_is_masked_too(): void
     {
+        // query_string is stored as parse_url() returns it, with no leading
+        // "?", so the first parameter has no separator in front of it. It used
+        // to escape the rule and leak in full.
         $harness = $this->harness();
 
         $harness->logger()->log(ServiceCallPayload::create('si_service_call', 'GET', 'https://api.example.com/v1/items?api_key=SUPERSECRET123&page=2')->withSuccess());
 
-        self::assertSame('api_key=SUPERSECRET123&page=2', $harness->lastRecord()['data']['query_string']);
-        self::assertStringContainsString('SUPERSECRET123', $harness->lines()[0]);
+        self::assertSame('api_key=***&page=2', $harness->lastRecord()['data']['query_string']);
+        self::assertStringNotContainsString('SUPERSECRET123', $harness->lines()[0]);
     }
 
     public function test_a_secret_after_the_first_query_parameter_is_masked(): void

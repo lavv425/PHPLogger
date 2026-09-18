@@ -1,10 +1,16 @@
 # Runs the suite on PHP 7.4.3, the oldest supported runtime.
 #
-#   docker compose run --rm test                    the whole suite
+#   docker compose up                               build everything and run the suite
+#   docker compose run --rm test                    the same, with a real exit code for CI
 #   docker compose run --rm test --testsuite unit   any PHPUnit argument
 #   docker compose run --rm coverage                the suite with a coverage report
 #   docker compose run --rm php -v                  a PHP 7.4.3 command line
 #   docker compose run --rm composer update         dependency work
+#
+# No Composer, no PHP and no extension is needed on the host: the image builds
+# its own vendor/. Only "test" starts with "up"; the other services sit behind a
+# profile so they do not all run at once, and "docker compose run" enables their
+# profile on its own.
 #
 # The project is bind mounted so edits are picked up without rebuilding, while
 # vendor/ stays the copy baked into the image: the host may be on a different
@@ -21,6 +27,7 @@ services:
     command: []
 
   coverage:
+    profiles: ["tools"]
     build: .
     image: phplogger:7.4.3
     volumes:
@@ -34,6 +41,7 @@ services:
     command: []
 
   php:
+    profiles: ["tools"]
     build: .
     image: phplogger:7.4.3
     volumes:
@@ -48,6 +56,7 @@ services:
   # runtime. It writes vendor/ and composer.lock to the host — rebuild the
   # image afterwards so the baked copy catches up.
   composer:
+    profiles: ["tools"]
     image: composer:2.2
     volumes:
       - .:/app

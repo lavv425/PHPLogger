@@ -99,34 +99,40 @@ final class ScrubberTest extends TestCase
         self::assertStringContainsString('4111111111111112', $this->scrubber->scrubString('order 4111111111111112'));
     }
 
-    /**
-     * Pins a known false positive of the base64-blob rule, which treats "/" as
-     * a base64 character: any path segment run of 40 characters or more is
-     * masked, so a real deployment path becomes "/***.php" and the stack trace
-     * that contains it stops being usable for debugging.
-     *
-     * TODO(tech-debt): exclude path-shaped strings from the base64 rule (or
-     * require the run to contain no "/"), then flip these assertions.
-     */
-    public function test_a_long_file_path_is_masked_as_if_it_were_a_secret(): void
+    /** @dataProvider filePaths */
+    public function test_a_file_path_survives_the_base64_rule(string $path): void
     {
-        self::assertSame(
-            '/***.php',
-            $this->scrubber->scrubString('/var/www/html/app/Http/Controllers/CheckoutController.php')
-        );
+        // The rule used to treat "/" as a base64 character, which masked every
+        // deployment path and left data.file and the stack trace useless.
+        self::assertSame($path, $this->scrubber->scrubString($path));
     }
 
-    public function test_a_stack_frame_loses_its_path_for_the_same_reason(): void
+    /** @return array<string, array{string}> */
+    public function filePaths(): array
     {
-        self::assertSame(
-            '#0 /***.php(42): handle()',
-            $this->scrubber->scrubString('#0 /var/www/html/app/Http/Controllers/CheckoutController.php(42): handle()')
-        );
+        return [
+            'short' => ['/app/Auth.php'],
+            'typical deployment path' => ['/var/www/html/app/Http/Controllers/CheckoutController.php'],
+            'very deep path' => ['/srv/application/current/vendor/company/billing/src/Domain/Invoice/InvoiceRepository.php'],
+            'stack frame' => ['#0 /var/www/html/app/Http/Controllers/CheckoutController.php(42): handle()'],
+            'windows style' => ['C:\\inetpub\\wwwroot\\application\\src\\Controllers\\CheckoutController.php'],
+        ];
     }
 
-    public function test_a_short_path_survives(): void
+    public function test_a_long_url_keeps_its_path(): void
     {
-        self::assertSame('/app/Auth.php', $this->scrubber->scrubString('/app/Auth.php'));
+        $url = 'https://api.example.com/v1/organisations/42/subscriptions/renewals';
+
+        self::assertSame($url, $this->scrubber->scrubString($url));
+    }
+
+    public function test_an_opaque_token_is_still_masked(): void
+    {
+        // The rule still has to earn its place: a long run with no separator
+        // is exactly the shape of an API key.
+        $token = str_repeat('A1b2C3d4', 8);
+
+        self::assertSame(Scrubber::MASK, $this->scrubber->scrubString($token));
     }
 
     public function test_keeps_harmless_text_intact(): void

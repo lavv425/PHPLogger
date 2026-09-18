@@ -125,7 +125,7 @@ final class PsrStyleLoggerTest extends TestCase
         self::assertSame(ErrorType::EXCEPTION, $record['error']['type']);
         self::assertSame('connection refused', $record['error']['message']);
         self::assertSame($line, $record['data']['line']);
-        self::assertStringEndsWith('.php', $record['data']['file']);
+        self::assertSame(__FILE__, $record['data']['file']);
     }
 
     public function test_a_non_throwable_exception_key_is_ignored(): void
